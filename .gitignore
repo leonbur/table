@@ -1,0 +1,21 @@
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea/
+*.iml
+out
+gen
+
+# Scala
+*.sc
+target/
+project/target/
+project/project/
+.bsp/
+
+# Metals
+.bloop/
+.metals/
+.vscode
+project/metals.sbt
