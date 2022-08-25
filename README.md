@@ -39,7 +39,7 @@ will output
 ```  
 
 ## Filtering
-You can filter only the rows you are care about with `-f`/`--filter`  
+You can filter only the rows you care about with `-f`/`--filter`. The filter works by searching if the cell includes the searched substring.  
 ```shell
 #docker images:
 #REPOSITORY          TAG       IMAGE ID       CREATED        SIZE
