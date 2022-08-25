@@ -48,10 +48,10 @@ class Columns(cols: Vector[Column]):
 
 object Columns:
   def apply(input: String): Columns =
-    val regex = "(\\S+( \\S+)*) +".r
+    val regex = "(^ +)|(\\S+(?: \\S+)*  +)|(\\S+(?: \\S+)*$)".r
     val segments = regex.findAllIn(input).toVector
     val offsets = segments.map(_.length).scan(0)(_ + _)
-    val names = segments.map(_.trim) :+ input.substring(offsets.last)
+    val names = segments.map(_.trim)
 
     val columns = (names zip offsets).map((name, offset) => Column(name, offset))
     new Columns(columns)

@@ -33,6 +33,34 @@ class TableTest extends FunSuite :
     assertEquals(actual, expected)
   }
 
+  test("selecting columns: header-less with columns with empty strings") {
+    val input =
+      """          202         203                             blabla@gmail.com
+        |          208         209                             blabla@gmail.com
+        |*         42          43                              blabla@gmail.com                some-namespace
+        |          84          85                              blabla@gmail.com
+        |          96          97                              blabla@gmail.com
+        |          ae1         gke_bla-system_asia-east1_ae1   gke_bla-system_asia-east1_ae1   some-namespace
+        |          uw2-edt-1   uw2-edt-2                       blabla@gmail.com
+        |          uw2-pub-1   uw2-pub-2                       blabla@gmail.com""".stripMargin
+
+    val lines = input.split('\n')
+    val columns = Columns(lines.head)
+    val config = Config(select = Some(Select.Regular(Vector(1))))
+
+    val expected = List("202",
+    "208",
+    "42",
+    "84",
+    "96",
+    "ae1",
+    "uw2-edt-1",
+    "uw2-pub-1")
+
+    val actual = Table.traverseLines(Iterator.from(lines), columns, config).toList
+    assertEquals(actual, expected)
+  }
+
   test("selecting all but excluded columns: exclude three columns and remain with two") {
     val input =
       """REPOSITORY          TAG       IMAGE ID       CREATED        SIZE
