@@ -66,7 +66,7 @@ object Config:
         .text("read from file instead of stdin"),
       checkConfig(c =>
         if (c.select.isEmpty)
-          failure("missing --select or --exclude-select or --project options")
+          failure("missing selection operation [--select, --exclude-select, --project]")
         else if (multipleSelects)
           failure("only one of --select, --exclude-select, --project options can be chosen")
         else

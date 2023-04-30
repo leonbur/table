@@ -1,11 +1,14 @@
 # Table
 
-A command line tool to select columns from a table-shaped input.  Supports filtering and formatting.
-Run `table` without arguments to see available options.
+A command line tool to select columns from a table-shaped input, where columns are separated by multiple whitespaces.  Supports filtering and formatting.
+Run `table` without any arguments to see available options.
 
 Quick example:
+
+* `-h` will treat the first line as the header and allow selecting the columns by name
+* `-s` to choose which columns to output
 ```shell
-#docker images:
+docker images
 #REPOSITORY          TAG       IMAGE ID       CREATED        SIZE
 #bitnami/kafka       3.2       b7add9628c8e   4 weeks ago    657MB
 #bitnami/zookeeper   3.8       000e247c0e4c   4 weeks ago    477MB
@@ -21,8 +24,6 @@ docker images | table -h -s "TAG,IMAGE ID"
 #11.0
 #23d35e2be72f
 ```
-* `-h` will parse the first line as the header and allow selecting the columns by name
-* `-s` will choose which columns to output
 
 ## Selecting
 1. regular select: `-s`/`--select`. select the columns by name (if `--header` flag is on) or by the index of the column.  
@@ -54,4 +55,47 @@ docker images | table -h -s "TAG,IMAGE ID" -f "REPOSITORY=bitnami"
 #b7add9628c8e
 #3.8
 #000e247c0e4c
+```
+#### Note
+`table` doesn't handle properly two specific cases:
+1. Right-justified column headers, for example notice the TIME column:
+    ```shell
+    ps -ef
+    #  UID   PID  PPID   C STIME   TTY           TIME CMD
+    #    0     1     0   0  9Mar23 ??       336:12.65 /sbin/launchd
+    #    0   323     1   0  9Mar23 ??        43:20.14 /usr/libexec/logd
+    ```
+    This case would not catch the width of the TIME column properly
+2. Columns with a single whitespace between them - this is intentional so that `table` could capture multi-word columns. In the same example as before, notice the C and STIME columns - they will be captured as a single column:
+    ```shell
+    ps -ef
+    #  UID   PID  PPID   C STIME   TTY           TIME CMD
+    #    0     1     0   0  9Mar23 ??       336:12.65 /sbin/launchd
+    #    0   323     1   0  9Mar23 ??        43:20.14 /usr/libexec/logd
+   
+   
+   ps -ef | table -h -s C
+   # C is invalid column name. possible names: [, TIME CMD, PPID, PID, C STIME, UID, TTY]
+    ```
+
+---
+## Build
+### Setup
+While `table` can work with a JVM because it's written in [Scala](http://www.google.com), it's intended to be a fast CLI tool, so it should be compiled to a native binary.
+The build requires Clang/LLVM installed for Scala Native compilation. You can use [SDKMAN](https://sdkman.io/) to install JVM-related dependencies
+
+#### requirements:
+1. Java (at least version 11) - [Temurin OpenJDK](https://adoptium.net/), or using SDKMAN: ```sdk install java``` 
+2. SBT - [official download](https://www.scala-sbt.org/), or using SDKMAN: ```sdk install sbt```
+3. Clang/LLVM - see Scala Native's [instructions](https://scala-native.org/en/stable/user/setup.html#installing-clang-and-runtime-dependencies)
+
+### Compile
+```shell
+sbt table/compile table/nativeLink
+```
+should produce a binary `table-out` under `target/<scala-version>/`
+
+### Test
+```shell
+sbt test
 ```
