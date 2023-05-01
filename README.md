@@ -56,7 +56,7 @@ docker images | table -h -s "TAG,IMAGE ID" -f "REPOSITORY=bitnami"
 #3.8
 #000e247c0e4c
 ```
-#### Note
+### Limitations
 `table` doesn't handle properly two specific cases:
 1. Right-justified column headers, for example notice the TIME column:
     ```shell
