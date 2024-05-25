@@ -85,17 +85,17 @@ While `table` can work with a JVM because it's written in [Scala](http://www.goo
 The build requires Clang/LLVM installed for Scala Native compilation. You can use [SDKMAN](https://sdkman.io/) to install JVM-related dependencies
 
 #### requirements:
-1. Java (at least version 11) - [Temurin OpenJDK](https://adoptium.net/), or using SDKMAN: ```sdk install java``` 
-2. SBT - [official download](https://www.scala-sbt.org/), or using SDKMAN: ```sdk install sbt```
-3. Clang/LLVM - see Scala Native's [instructions](https://scala-native.org/en/stable/user/setup.html#installing-clang-and-runtime-dependencies)
+1. [Scala-CLI](https://scala-cli.virtuslab.org/install) or using SDKMAN: ```sdk install scalacli``` 
+2. Clang/LLVM - see Scala Native's [instructions](https://scala-native.org/en/stable/user/setup.html#installing-clang-and-runtime-dependencies)
 
-### Compile
+### Compile and packge an executable
+From the root directory
 ```shell
-sbt table/compile table/nativeLink
+scala-cli --power package --native .  -S 3.4.1 -o table
 ```
-should produce a binary `table-out` under `target/<scala-version>/`
+will create an executable named `table`
 
 ### Test
 ```shell
-sbt test
+scala-cli test . --native
 ```
