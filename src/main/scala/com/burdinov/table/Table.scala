@@ -2,8 +2,7 @@ package com.burdinov.table
 
 import com.burdinov.table.Config.{parseArgsOrExit, parseColumnStr}
 
-import scala.annotation.tailrec
-import scala.io.{BufferedSource, Source}
+import scala.io.Source
 import scala.io.StdIn.readLine
 
 type Offset = Int

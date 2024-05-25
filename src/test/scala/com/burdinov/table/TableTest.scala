@@ -1,3 +1,5 @@
+//> using test.dep org.scalameta::munit::1.0.0
+
 package com.burdinov.table
 
 import munit.FunSuite

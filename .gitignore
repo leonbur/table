@@ -15,7 +15,11 @@ project/project/
 .bsp/
 
 # Metals
+.DS_Store
 .bloop/
 .metals/
-.vscode
+.vscode/
 project/metals.sbt
+
+# Scala-CLI
+.scala-build/
