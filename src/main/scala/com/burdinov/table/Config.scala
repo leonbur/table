@@ -1,3 +1,5 @@
+//> using dep com.github.scopt::scopt::4.1.0
+
 package com.burdinov.table
 
 import scopt.OParser
