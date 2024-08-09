@@ -1,6 +1,6 @@
 # Table
 
-A command line tool to select columns from a table-shaped input, where columns are separated by multiple whitespaces.  Supports filtering and formatting.
+A command line tool to select columns from a table-shaped input, where columns are separated by multiple whitespaces (or a delimiter of your choice).  Supports filtering and formatting.
 Run `table` without any arguments to see available options.
 
 Quick example:
@@ -42,7 +42,7 @@ will output
 ## Filtering
 You can filter only the rows you care about with `-f`/`--filter`. The filter works by searching if the cell includes the searched substring.  
 ```shell
-#docker images:
+docker images:
 #REPOSITORY          TAG       IMAGE ID       CREATED        SIZE
 #bitnami/kafka       3.2       b7add9628c8e   4 weeks ago    657MB
 #bitnami/zookeeper   3.8       000e247c0e4c   4 weeks ago    477MB
@@ -56,27 +56,50 @@ docker images | table -h -s "TAG,IMAGE ID" -f "REPOSITORY=bitnami"
 #3.8
 #000e247c0e4c
 ```
+
+### Custom delimiter
+To split the columns by a different delimiter, such as dashes (`-`), you can use `-d/--delimiter` flag to choose a different character than whitespace.
+In the following example the whitespaces has been replaced by dashes we declare dash to be the delimiter:
+```shell
+docker images
+#REPOSITORY----------TAG----IMAGE ID-------CREATED-------SIZE
+#bitnami/kafka-------3.2----b7add9628c8e---4 weeks ago---657MB
+#bitnami/zookeeper---3.8----000e247c0e4c---4 weeks ago---477MB
+#openjdk-------------11.0---23d35e2be72f---7 weeks ago---650MB
+
+docker images | table -h -s "TAG,IMAGE ID" -d -
+
+#output:
+#3.2
+#b7add9628c8e
+#3.8
+#000e247c0e4c
+```
+### custom repetitions of the delimiter
+To change the amount of times the delimiter has to show up consecutively to split the columns, you can use the `-r/--delimiter-repeats` flag.
+The following example shows a table input that is separated by a single tab (`\t`), so we will declare the delimiter to be the tab symbol, and the repetitions to be 1:
+```shell
+cat example.tsv
+#CONST  123456  12.45
+
+cat example.tsv | table -s 1 -d $'\t' -r 1
+
+#output:
+#123456
+```
+__Note on special character escaping:__ to properly pass special characters like tab (`\t`) or new line (`\n`), it needs to be interpreted by the shell like so: `$'\t'`.
+
+
 ### Limitations
-`table` doesn't handle properly two specific cases:
-1. Right-justified column headers, for example notice the TIME column:
-    ```shell
-    ps -ef
-    #  UID   PID  PPID   C STIME   TTY           TIME CMD
-    #    0     1     0   0  9Mar23 ??       336:12.65 /sbin/launchd
-    #    0   323     1   0  9Mar23 ??        43:20.14 /usr/libexec/logd
-    ```
-    This case would not catch the width of the TIME column properly
-2. Columns with a single whitespace between them - this is intentional so that `table` could capture multi-word columns. In the same example as before, notice the C and STIME columns - they will be captured as a single column:
-    ```shell
-    ps -ef
-    #  UID   PID  PPID   C STIME   TTY           TIME CMD
-    #    0     1     0   0  9Mar23 ??       336:12.65 /sbin/launchd
-    #    0   323     1   0  9Mar23 ??        43:20.14 /usr/libexec/logd
-   
-   
-   ps -ef | table -h -s C
-   # C is invalid column name. possible names: [, TIME CMD, PPID, PID, C STIME, UID, TTY]
-    ```
+`table` doesn't handle properly a specific case:
+Right-justified column headers, for example notice the TIME column:
+```shell
+ ps -ef
+ #  UID   PID  PPID   C STIME   TTY           TIME CMD
+ #    0     1     0   0  9Mar23 ??       336:12.65 /sbin/launchd
+ #    0   323     1   0  9Mar23 ??        43:20.14 /usr/libexec/logd
+```
+ This case would not catch the width of the TIME column properly
 
 ---
 ## Build
