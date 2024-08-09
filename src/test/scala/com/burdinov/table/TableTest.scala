@@ -153,7 +153,7 @@ class TableTest extends FunSuite :
 
     val lines = input.split('\n')
     val columns = Columns(lines.head, delimiter = '-')
-    val config = Config(select = Some(Select.Regular(Vector(1, 2))), delimiter = "-")
+    val config = Config(select = Some(Select.Regular(Vector(1, 2))), delimiter = '-')
 
     val expected = List("3.2", "b7add9628c8e", "3.8", "000e247c0e4c", "11.0", "23d35e2be72f")
 

@@ -118,7 +118,7 @@ object Table:
       sys.exit(1)
 
     val firstLine = input.next()
-    val columns = Columns(firstLine)
+    val columns = Columns(firstLine, config.delimiter, config.delimiterRepeatsAtLeast)
 
     val rest = if (config.readHeader) input else Iterator(firstLine) ++ input
 

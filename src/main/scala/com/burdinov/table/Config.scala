@@ -15,7 +15,7 @@ case class Config(select: Option[Select] = None,
                   readHeader: Boolean = false,
                   filterColumns: Map[Int | String, String] = Map(),
                   file: Option[File] = None,
-                  delimiter: String = " ",
+                  delimiter: Char = ' ',
                   delimiterRepeatsAtLeast: Int = 2)
 
 object Config:
@@ -57,13 +57,9 @@ object Config:
           c.copy(select = Some(Select.Project(x)))
         )
         .text("replaces the default printing of every selected column in each row with a string interpolated from the selected columns of each row"),
-      opt[String]('d', "delimiter")
-        .valueName("e.g. \"-\" or \"_\"")
+      opt[Char]('d', "delimiter")
+        .valueName("e.g. '-' or '_'")
         .action((d, c) => c.copy(delimiter = d))
-        .validate(delim =>
-          if (delim.nonEmpty) success
-          else failure("delimiter cannot be an empty string")
-        )
         .text("changes the default delimiter to a different set of characters"),
       opt[Int]('r', "delimiter-repeats")
         .valueName("2 is default. could be a value between 1 and higher")
