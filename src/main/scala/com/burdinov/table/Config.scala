@@ -14,7 +14,9 @@ enum Select:
 case class Config(select: Option[Select] = None,
                   readHeader: Boolean = false,
                   filterColumns: Map[Int | String, String] = Map(),
-                  file: Option[File] = None)
+                  file: Option[File] = None,
+                  delimiter: String = " ",
+                  delimiterRepeatsAtLeast: Int = 2)
 
 object Config:
   def parseArgsOrExit(args: Seq[String]): Config =
@@ -55,6 +57,14 @@ object Config:
           c.copy(select = Some(Select.Project(x)))
         )
         .text("replaces the default printing of every selected column in each row with a string interpolated from the selected columns of each row"),
+      opt[String]('d', "delimiter")
+        .valueName("e.g. \"-\" or \"_\"")
+        .action((d, c) => c.copy(delimiter = d))
+        .validate(delim =>
+          if (delim.nonEmpty) success
+          else failure("delimiter cannot be an empty string")
+        )
+        .text("changes the default delimiter to a different set of characters"),
       opt[Unit]('h', "header")
         .action((_, c) => c.copy(readHeader = true))
         .text("treat first line as header. allows selecting columns by column names extracted from the header instead of by index"),
