@@ -160,3 +160,21 @@ class TableTest extends FunSuite :
     val actual = Table.traverseLines(lines.tail.iterator, columns, config).toList
     assertEquals(actual, expected)
   }
+
+  test("custom delimiter repeats") {
+    val input =
+      """REPOSITORY----------TAG----IMAGE ID-------CREATED-------SIZE
+        |bitnami/kafka-------3.2----b7add9628c8e---4 weeks ago---657MB
+        |bitnami/zookeeper---3.8----000e247c0e4c---4 weeks ago---477MB
+        |openjdk-------------11.0---23d35e2be72f---7 weeks ago---650MB
+        |""".stripMargin
+
+    val lines = input.split('\n')
+    val columns = Columns(lines.head, delimiter = '-', delimiterRepeats = 5)
+    val config = Config(select = Some(Select.Regular(Vector(1, 2))), delimiterRepeatsAtLeast = 5)
+
+    val expected = List("3.2----b7add9628c8e", "4 weeks ago", "3.8----000e247c0e4c", "4 weeks ago", "11.0---23d35e2be72f", "7 weeks ago")
+
+    val actual = Table.traverseLines(lines.tail.iterator, columns, config).toList
+    assertEquals(actual, expected)
+  }

@@ -35,7 +35,7 @@ object Config:
 
     OParser.sequence(
       programName("table"),
-      head("table", "1.0"),
+      head("table", "1.1"),
       opt[Seq[String]]('s', "select")
         .valueName("0,1,2,...")
         .action((x, c) =>
@@ -65,6 +65,14 @@ object Config:
           else failure("delimiter cannot be an empty string")
         )
         .text("changes the default delimiter to a different set of characters"),
+      opt[Int]('r', "delimiter-repeats")
+        .valueName("2 is default. could be a value between 1 and higher")
+        .action((d, c) => c.copy(delimiterRepeatsAtLeast = d))
+        .validate(repeats =>
+          if (repeats > 0) success
+          else failure("delimiter repeats must be at least 1")
+        )
+        .text("sets at least how many times the delimiter needs to appear in a row to separate between columns"),
       opt[Unit]('h', "header")
         .action((_, c) => c.copy(readHeader = true))
         .text("treat first line as header. allows selecting columns by column names extracted from the header instead of by index"),
