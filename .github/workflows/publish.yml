@@ -1,9 +1,4 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-name: Scala CI
+name: Publish
 
 on:
   push:
@@ -15,7 +10,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  package:
     runs-on: ${{ matrix.OS }}
     strategy:
       matrix:
@@ -27,5 +22,7 @@ jobs:
         fetch-depth: 0
     - uses: coursier/cache-action@v6
     - uses: VirtusLab/scala-cli-setup@v1.4.3
-    - name: Run tests
-      run: scala-cli test .
+#    - name: Run tests
+#      run: scala-cli test .
+    - name: Package app
+      run: scala-cli .github/scripts/package.sc
