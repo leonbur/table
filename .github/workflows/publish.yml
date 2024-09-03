@@ -26,3 +26,9 @@ jobs:
 #      run: scala-cli test .
     - name: Package app
       run: scala-cli .github/scripts/package.sc
+    - uses: actions/upload-artifact@v3
+      with:
+        name: launchers
+        path: artifacts
+        if-no-files-found: error
+        retention-days: 2
