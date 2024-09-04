@@ -28,4 +28,4 @@ jobs:
       run: scala-cli .github/scripts/package.sc
     - uses: ncipollo/release-action@v1
       with:
-        artifacts: "table"
+        artifacts: "./artifacts/table-*"
