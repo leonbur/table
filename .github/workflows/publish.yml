@@ -2,12 +2,11 @@ name: Publish
 
 on:
   push:
-    branches: [ "master" , "packaging"]
-  pull_request:
-    branches: [ "master" ]
+    branches: [ "packaging"]
 
 permissions:
-  contents: read
+  packages: write
+  contents: write
 
 jobs:
   package:
@@ -22,13 +21,8 @@ jobs:
         fetch-depth: 0
     - uses: coursier/cache-action@v6
     - uses: VirtusLab/scala-cli-setup@v1.4.3
-#    - name: Run tests
-#      run: scala-cli test .
     - name: Package app
       run: scala-cli .github/scripts/package.sc
-    - uses: actions/upload-artifact@v3
+    - uses: ncipollo/release-action@v1
       with:
-        name: launchers
-        path: artifacts
-        if-no-files-found: error
-        retention-days: 2
+        artifacts: "table"
