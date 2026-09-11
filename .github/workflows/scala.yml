@@ -60,13 +60,11 @@ jobs:
         path: dist
         merge-multiple: true
     - name: Create or update GitHub Release
-      env:
-        GH_TOKEN: ${{ github.token }}
-        TAG: ${{ github.ref_name }}
-      run: |
-        chmod +x dist/table-linux dist/table-macos
-        if gh release view "$TAG" >/dev/null 2>&1; then
-          gh release upload "$TAG" dist/table-linux dist/table-macos --clobber
-        else
-          gh release create "$TAG" dist/table-linux dist/table-macos --generate-notes
-        fi
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: dist/table-linux,dist/table-macos
+        artifactErrorsFailBuild: true
+        allowUpdates: true
+        replacesArtifacts: true
+        generateReleaseNotes: true
+        token: ${{ github.token }}
